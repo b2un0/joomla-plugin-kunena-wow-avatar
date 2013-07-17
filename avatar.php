@@ -11,9 +11,12 @@ defined('_JEXEC') or die;
 
 class KunenaAvatarWoW_Avatar extends KunenaAvatar {
 	protected $params = null;
-
-	public function __construct($params) {
+	
+	public function __construct(&$params) {
 		$this->params = $params;
+		$this->params->set('guild', rawurlencode(JString::strtolower($this->params->get('guild'))));
+		$this->params->set('realm', rawurlencode(JString::strtolower($this->params->get('realm'))));
+		$this->params->set('region', JString::strtolower($this->params->get('region')));
 	}
 
 	public function getEditURL() {
