@@ -37,7 +37,7 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar {
 		}
 		
 		foreach($members as $member) {
-			if($user->name == $member->character->name) {
+			if($user->{$this->params->get('mapping', 'name')} == $member->character->name) {
 				return 'http://' . $this->params->get('region') . '.battle.net/static-render/' . $this->params->get('region') . '/' . $member->character->thumbnail;
 			}
 		}

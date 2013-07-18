@@ -17,7 +17,11 @@
 	<config>
 		<fields name="params">
 			<fieldset name="basic">
-				<field name="avatar" type="list" default="1" label="Enable WoW Avatars" description="Use WoW Avatar images in Kunena." >
+			    <field name="mapping" type="list" default="name" label="Mapping" description="select the User-Field for Mapping">
+					<option value="name">Name</option>
+					<option value="username">Username</option>
+				</field>
+				<field name="avatar" type="list" default="1" label="Enable WoW Avatars" description="Use WoW Avatar images in Kunena.">
 					<option value="0">JNO</option>
 					<option value="1">JYES</option>
 				</field>
