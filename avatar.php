@@ -10,7 +10,10 @@
 defined('_JEXEC') or die;
 
 class KunenaAvatarWoW_Avatar extends KunenaAvatar {
+	
 	protected $params = null;
+	
+	protected $default = 'media/kunena/avatars/nophoto.jpg';
 	
 	public function __construct(&$params) {
 		$this->params = $params;
@@ -30,7 +33,7 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar {
 		
 		if(!is_array($members)) {
 			JFactory::getApplication()->enqueueMessage($members, 'error');
-			return '';
+			return $this->default;
 		}
 		
 		foreach($members as $member) {
@@ -39,7 +42,7 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar {
 			}
 		}
 		
-		return '';
+		return $this->default;
 	}
 	
 	protected function _getMembers() {
