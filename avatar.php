@@ -32,7 +32,7 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar {
 		$members = $this->_getMembers();
 		
 		if(!is_array($members)) {
-			JFactory::getApplication()->enqueueMessage($members, 'error');
+			JFactory::getApplication()->enqueueMessage('Kunena - WOW Avatar: ' . $members, 'error');
 			return $this->default;
 		}
 		
@@ -51,7 +51,7 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar {
 	protected function _getMembers() {
 		$url = 'http://' . $this->params->get('region') . '.battle.net/api/wow/guild/' . $this->params->get('realm') . '/' . $this->params->get('guild') . '?fields=members';
 		
-		$cache = JFactory::getCache(__CLASS__, 'output');
+		$cache = JFactory::getCache('wow', 'output');
 		$cache->setCaching(1);
 		$cache->setLifeTime($this->params->get('cache_time', 60));
 		 
