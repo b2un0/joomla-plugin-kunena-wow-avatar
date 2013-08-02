@@ -20,16 +20,13 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar {
 		$this->params->set('guild', rawurlencode(JString::strtolower($this->params->get('guild'))));
 		$this->params->set('realm', rawurlencode(JString::strtolower($this->params->get('realm'))));
 		$this->params->set('region', JString::strtolower($this->params->get('region')));
-	}
-
-	public function getEditURL() {
-		return KunenaRoute::_('index.php?option=com_kunena&view=user&layout=edit');
+		$this->default = $this->params->get('default', $this->default);
 	}
 
 	protected function _getURL($user, $sizex, $sizey) {
 		$user = KunenaFactory::getUser($user);
 		
-		$members = $this->_getMembers();
+		$members = $this->getWoWCharacterList();
 		
 		if(!is_array($members)) {
 			JFactory::getApplication()->enqueueMessage('Kunena - WOW Avatar: ' . $members, 'error');
@@ -48,7 +45,7 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar {
 		return $this->default;
 	}
 	
-	protected function _getMembers() {
+	protected function getWoWCharacterList() {
 		$url = 'http://' . $this->params->get('region') . '.battle.net/api/wow/guild/' . $this->params->get('realm') . '/' . $this->params->get('guild') . '?fields=members';
 		
 		$cache = JFactory::getCache('wow', 'output');

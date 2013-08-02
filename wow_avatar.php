@@ -17,7 +17,6 @@ class plgKunenaWoW_Avatar extends JPlugin {
 	}
 
 	public function onKunenaGetAvatar() {
-		if (!$this->params->get('avatar', 1)) return null;
 		require_once __DIR__ . '/avatar.php';
 		return new KunenaAvatarWoW_Avatar($this->params);
 	}
