@@ -17,8 +17,15 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar {
 	
 	public function __construct(&$params) {
 		$this->params = $params;
-		$this->params->set('guild', rawurlencode(JString::strtolower($this->params->get('guild'))));
-		$this->params->set('realm', rawurlencode(JString::strtolower($this->params->get('realm'))));
+		
+		if(version_compare(JVERSION, 3, '>=')) {
+			$this->params->set('guild', rawurlencode(JString::strtolower($this->params->get('guild'))));
+			$this->params->set('realm', rawurlencode(JString::strtolower($this->params->get('realm'))));
+		}else{
+			$this->params->set('realm', str_replace(array('%20', ' '), '-', $this->params->get('realm')));
+			$this->params->set('guild', str_replace(array('%20', ' '), '%2520', $this->params->get('guild')));
+		}
+		
 		$this->params->set('region', JString::strtolower($this->params->get('region')));
 		$this->default = $this->params->get('default', $this->default);
 	}
