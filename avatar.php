@@ -15,6 +15,8 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar {
 	
 	protected $default = 'media/kunena/avatars/nophoto.jpg';
 	
+	protected $character = null;
+	
 	public function __construct(&$params) {
 		$this->params = $params;
 		
@@ -43,13 +45,59 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar {
 		$name = $user->{ $this->params->get('mapping', 'name') };
 		$name = JString::strtolower($name);
 		
+		$this->character = null;
 		foreach($members as $member) {
-			if($name == JString::strtolower($member->character->name)) {
+		    $member->character->name = JString::strtolower($member->character->name);
+			if($name == $member->character->name) {
+			    $this->character = $member->character;
 				return 'http://' . $this->params->get('region') . '.battle.net/static-render/' . $this->params->get('region') . '/' . $member->character->thumbnail;
 			}
 		}
 		
 		return $this->default;
+	}
+	
+	public function getLink($user, $class='', $sizex=90, $sizey=90) {
+	    $size = $this->getSize($sizex, $sizey);
+	    $avatar = $this->getURL($user, $size->x, $size->y);
+	    
+	    if(!$avatar) {
+	        return;
+	    }
+	    
+	    if($class) {
+	        $attributes['class'] = $class;
+	    }
+	
+	    if(!$this->resize) {
+	       $styles[] = 'max-width:'.$size->x.'px';
+    	   $styles[] = 'max-height:'.$size->y.'px';
+	    }
+	    
+	    if(is_object($this->character)) {
+    	    if(JPluginHelper::isEnabled('system', 'wowhead')) {
+    	        $url = 'http://' . $this->params->get('lang') . '.wowhead.com/profile=' . $this->params->get('region') . '.' . $this->params->get('realm'). '.' . $this->character->name;
+    	    }
+    	    
+    	    if(JPluginHelper::isEnabled('system', 'darktip')) {
+    	        // must be set for user list view
+    	        $attributes['data-darktip'] = 'wow.character:'.$this->params->get('region').'.'.$this->params->get('realm').'.'.$this->character->name.'('.$this->params->get('lang', 'en').')';
+    	        $url = 'http://' . $this->params->get('region') . '.battle.net/wow/' . $this->params->get('lang') . '/character/' . $this->params->get('realm') . '/' . $this->character->name . '/';
+    	    }
+	    }
+	    
+	    if(isset($styles)) {
+	        $attributes['style'] = implode(';', $styles);
+	    }
+	
+	    $link = JHtml::_('image', $avatar, JText::sprintf('COM_KUNENA_LIB_AVATAR_TITLE', $user->getName()), $attributes);
+	    
+	    // replace Avatar with Link on Profile view
+	    if($class == 'kavatar' && isset($url)) {
+	        $link = JHtml::_('link', $url, $link, array('target' => '_blank'));
+	    }
+	
+	    return $link;
 	}
 	
 	protected function getWoWCharacterList() {
