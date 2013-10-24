@@ -81,11 +81,11 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar {
 	    
     	    switch($this->params->get('link', 'battle.net')) {
     	    	case 'battle.net':
-    	    	   $url = 'http://' . $this->params->get('lang') . '.wowhead.com/profile=' . $this->params->get('region') . '.' . $this->params->get('realm'). '.' . $this->character->name;
+	    	       $url = 'http://' . $this->params->get('region') . '.battle.net/wow/' . $this->params->get('lang') . '/character/' . $this->params->get('realm') . '/' . $this->character->name . '/';
     	    	break;
     	    	    
     	    	case 'wowhead.com':
-	    	       $url = 'http://' . $this->params->get('region') . '.battle.net/wow/' . $this->params->get('lang') . '/character/' . $this->params->get('realm') . '/' . $this->character->name . '/';
+    	    	   $url = 'http://' . $this->params->get('lang') . '.wowhead.com/profile=' . $this->params->get('region') . '.' . $this->params->get('realm'). '.' . $this->character->name;
     	    	break;
     	    }
 	    }
