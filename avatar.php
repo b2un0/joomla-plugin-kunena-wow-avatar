@@ -75,14 +75,18 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar {
 	    }
 	    
 	    if(is_object($this->character)) {
-    	    if(JPluginHelper::isEnabled('system', 'wowhead')) {
-    	        $url = 'http://' . $this->params->get('lang') . '.wowhead.com/profile=' . $this->params->get('region') . '.' . $this->params->get('realm'). '.' . $this->character->name;
-    	    }
-    	    
     	    if(JPluginHelper::isEnabled('system', 'darktip')) {
-    	        // must be set for user list view
     	        $attributes['data-darktip'] = 'wow.character:'.$this->params->get('region').'.'.$this->params->get('realm').'.'.$this->character->name.'('.$this->params->get('lang', 'en').')';
-    	        $url = 'http://' . $this->params->get('region') . '.battle.net/wow/' . $this->params->get('lang') . '/character/' . $this->params->get('realm') . '/' . $this->character->name . '/';
+    	    }
+	    
+    	    switch($this->params->get('link', 'battle.net')) {
+    	    	case 'battle.net':
+    	    	   $url = 'http://' . $this->params->get('lang') . '.wowhead.com/profile=' . $this->params->get('region') . '.' . $this->params->get('realm'). '.' . $this->character->name;
+    	    	break;
+    	    	    
+    	    	case 'wowhead.com':
+	    	       $url = 'http://' . $this->params->get('region') . '.battle.net/wow/' . $this->params->get('lang') . '/character/' . $this->params->get('realm') . '/' . $this->character->name . '/';
+    	    	break;
     	    }
 	    }
 	    

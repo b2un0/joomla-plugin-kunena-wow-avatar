@@ -41,6 +41,10 @@
                     <option value="pt">Português</option>
                     <option value="ru">Русский</option>
                 </field>
+                <field name="link" type="list" default="battle.net" required="true" label="Linking">
+                    <option value="battle.net">battle.net</option>
+                    <option value="wowhead.com">wowhead.com</option>
+                </field>
                 <field name="default" type="text" default="media/kunena/avatars/nophoto.jpg" required="true" label="Default" description="dont enter a full URL!" />
             </fieldset>
             <fieldset name="advanced">
