@@ -21,11 +21,11 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
         $this->params = $params;
 
         if (version_compare(JVERSION, 3, '>=')) {
-            $params->set('guild', rawurlencode(JString::strtolower($params->get('guild'))));
-            $params->set('realm', rawurlencode(JString::strtolower($params->get('realm'))));
+            $this->params->set('guild', rawurlencode(JString::strtolower($this->params->get('guild'))));
+            $this->params->set('realm', rawurlencode(JString::strtolower($this->params->get('realm'))));
         } else {
-            $params->set('realm', str_replace(array('%20', ' '), '-', $params->get('realm')));
-            $params->set('guild', str_replace(array('%20', ' '), '%2520', $params->get('guild')));
+            $this->params->set('realm', str_replace(array('%20', ' '), '-', $this->params->get('realm')));
+            $this->params->set('guild', str_replace(array('%20', ' '), '%2520', $this->params->get('guild')));
         }
 
         $this->params->set('region', JString::strtolower($this->params->get('region')));
@@ -73,7 +73,7 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
 
         $link = JHtml::_('image', $avatar, JText::sprintf('COM_KUNENA_LIB_AVATAR_TITLE', $user->getName()), $attributes);
 
-        // replace Avatar with Link on Profile view
+// replace Avatar with Link on Profile view
         if ($class == 'kavatar' && isset($url)) {
             $link = JHtml::_('link', $url, $link, array('target' => '_blank'));
         }
@@ -81,7 +81,8 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
         return $link;
     }
 
-    protected function _getURL($user, $sizex, $sizey)
+    protected
+    function _getURL($user, $sizex, $sizey)
     {
         $user = KunenaFactory::getUser($user);
 
@@ -107,7 +108,8 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
         return $this->default;
     }
 
-    protected function getWoWCharacterList()
+    protected
+    function getWoWCharacterList()
     {
         $url = 'http://' . $this->params->get('region') . '.battle.net/api/wow/guild/' . $this->params->get('realm') . '/' . $this->params->get('guild') . '?fields=members,achievements';
 
