@@ -103,7 +103,7 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
 
     protected function getWoWCharacterList()
     {
-        $url = 'http://' . $this->params->get('region') . '.battle.net/api/wow/guild/' . $this->params->get('realm') . '/' . $this->params->get('guild') . '?fields=members';
+        $url = 'http://' . $this->params->get('region') . '.battle.net/api/wow/guild/' . $this->params->get('realm') . '/' . $this->params->get('guild') . '?fields=members,achievements';
 
         $cache = JFactory::getCache('wow', 'output');
         $cache->setCaching(1);
