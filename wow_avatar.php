@@ -9,15 +9,18 @@
 
 defined('_JEXEC') or die;
 
-class plgKunenaWoW_Avatar extends JPlugin {
-	public function __construct(&$subject, $config) {
-		if (!(class_exists('KunenaForum') && KunenaForum::isCompatible('2.0') && KunenaForum::installed())) return;
+class plgKunenaWoW_Avatar extends JPlugin
+{
+    public function __construct(&$subject, $config)
+    {
+        if (!(class_exists('KunenaForum') && KunenaForum::isCompatible('2.0') && KunenaForum::installed())) return;
 
-		parent::__construct ( $subject, $config );
-	}
+        parent::__construct($subject, $config);
+    }
 
-	public function onKunenaGetAvatar() {
-		require_once __DIR__ . '/avatar.php';
-		return new KunenaAvatarWoW_Avatar($this->params);
-	}
+    public function onKunenaGetAvatar()
+    {
+        require_once __DIR__ . '/avatar.php';
+        return new KunenaAvatarWoW_Avatar($this->params);
+    }
 }
