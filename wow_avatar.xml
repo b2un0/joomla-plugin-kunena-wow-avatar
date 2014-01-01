@@ -13,7 +13,7 @@
         <filename plugin="wow_avatar">wow_avatar.php</filename>
         <filename>avatar.php</filename>
     </files>
-    <scriptfile>script.installer.phpp</scriptfile>
+    <scriptfile>script.installer.php</scriptfile>
     <updateservers>
         <server type="collection" priority="1" name="z-index development">http://www.z-index.net/en/extensions.xml</server>
     </updateservers>
