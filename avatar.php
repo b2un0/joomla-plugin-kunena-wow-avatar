@@ -3,7 +3,7 @@
 /**
  * @author     Branko Wilhelm <branko.wilhelm@gmail.com>
  * @link       http://www.z-index.net
- * @copyright  (c) 2013 Branko Wilhelm
+ * @copyright  (c) 2013 - 2014 Branko Wilhelm
  * @license    GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
@@ -73,7 +73,7 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
 
         $link = JHtml::_('image', $avatar, JText::sprintf('COM_KUNENA_LIB_AVATAR_TITLE', $user->getName()), $attributes);
 
-// replace Avatar with Link on Profile view
+        // replace Avatar with Link on Profile view
         if ($class == 'kavatar' && isset($url)) {
             $link = JHtml::_('link', $url, $link, array('target' => '_blank'));
         }
@@ -81,8 +81,7 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
         return $link;
     }
 
-    protected
-    function _getURL($user, $sizex, $sizey)
+    protected function _getURL($user, $sizex, $sizey)
     {
         $user = KunenaFactory::getUser($user);
 
@@ -108,8 +107,7 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
         return $this->default;
     }
 
-    protected
-    function getWoWCharacterList()
+    protected function getWoWCharacterList()
     {
         $url = 'http://' . $this->params->get('region') . '.battle.net/api/wow/guild/' . $this->params->get('realm') . '/' . $this->params->get('guild') . '?fields=members,achievements';
 
@@ -133,6 +131,7 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
         }
 
         if ($result->code != 200) {
+            // TODO better error message
             return __CLASS__ . ' HTTP-Status ' . JHtml::_('link', 'http://wikipedia.org/wiki/List_of_HTTP_status_codes#' . $result->code, $result->code, array('target' => '_blank'));
         }
 
