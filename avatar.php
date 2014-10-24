@@ -11,6 +11,7 @@ defined('_JEXEC') or die;
 
 class KunenaAvatarWoW_Avatar extends KunenaAvatar
 {
+    protected static $error = false;
 
     protected $params = null;
     protected $default = 'media/kunena/avatars/nophoto.jpg';
@@ -90,7 +91,6 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
         $members = $this->getWoWCharacterList();
 
         if (!is_array($members)) {
-            JFactory::getApplication()->enqueueMessage('Kunena - WOW Avatar: ' . $members, 'error');
             return $this->default;
         }
 
@@ -141,9 +141,10 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
             $cache->store($result, $key);
         }
 
-        if ($result->code != 200) {
-            // TODO better error message
-            return __CLASS__ . ' HTTP-Status ' . JHtml::_('link', 'http://wikipedia.org/wiki/List_of_HTTP_status_codes#' . $result->code, $result->code, array('target' => '_blank'));
+        // TODO better error message
+        if ($result->code != 200 && self::$error == false) {
+            self::$error = true;
+            JFactory::getApplication()->enqueueMessage('Kunena - WOW Avatar: ' . JHtml::_('link', 'http://wikipedia.org/wiki/List_of_HTTP_status_codes#' . $result->code, $result->code, array('target' => '_blank')), 'error');
         }
 
         $result->body = json_decode($result->body);
