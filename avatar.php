@@ -52,17 +52,19 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
         }
 
         if (is_object($this->character)) {
+            $this->character->realm = $this->realmUrlSafe($this->character->realm);
+
             if (JPluginHelper::isEnabled('system', 'darktip')) {
-                $attributes['data-darktip'] = 'wow.character:' . $this->params->get('region') . '.' . $this->params->get('realm') . '.' . $this->character->name . '(' . $this->params->get('lang', 'en') . ')';
+                $attributes['data-darktip'] = 'wow.character:' . $this->params->get('region') . '.' . $this->character->realm . '.' . $this->character->name . '(' . $this->params->get('lang', 'en') . ')';
             }
 
             switch ($this->params->get('link', 'battle.net')) {
                 case 'battle.net':
-                    $url = 'http://' . $this->params->get('region') . '.battle.net/wow/' . $this->params->get('lang') . '/character/' . $this->params->get('realm') . '/' . $this->character->name . '/';
+                    $url = 'http://' . $this->params->get('region') . '.battle.net/wow/' . $this->params->get('lang') . '/character/' . $this->character->realm . '/' . $this->character->name . '/';
                     break;
 
                 case 'wowhead.com':
-                    $url = 'http://' . $this->params->get('lang') . '.wowhead.com/profile=' . $this->params->get('region') . '.' . $this->params->get('realm') . '.' . $this->character->name;
+                    $url = 'http://' . $this->params->get('lang') . '.wowhead.com/profile=' . $this->params->get('region') . '.' . $this->character->realm . '.' . $this->character->name;
                     break;
             }
         }
@@ -105,6 +107,15 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
         }
 
         return $this->default;
+    }
+
+    protected function realmUrlSafe($realm)
+    {
+        if (version_compare(JVERSION, 3, '>=')) {
+            return rawurlencode(JString::strtolower($realm));
+        } else {
+            return str_replace(array('%20', ' '), '-', $realm);
+        }
     }
 
     protected function getWoWCharacterList()
