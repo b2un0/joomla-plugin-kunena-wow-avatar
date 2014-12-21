@@ -3,7 +3,7 @@
 /**
  * @author     Branko Wilhelm <branko.wilhelm@gmail.com>
  * @link       http://www.z-index.net
- * @copyright  (c) 2013 - 2014 Branko Wilhelm
+ * @copyright  (c) 2013 - 2015 Branko Wilhelm
  * @license    GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
@@ -21,16 +21,6 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
     {
         $this->params = $params;
 
-        if (version_compare(JVERSION, 3, '>=')) {
-            $this->params->set('guild', rawurlencode(JString::strtolower($this->params->get('guild'))));
-            $this->params->set('realm', rawurlencode(JString::strtolower($this->params->get('realm'))));
-        } else {
-            $this->params->set('realm', str_replace(array('%20', ' '), '-', $this->params->get('realm')));
-            $this->params->set('guild', str_replace(array('%20', ' '), '%2520', $this->params->get('guild')));
-        }
-
-        $this->params->set('region', JString::strtolower($this->params->get('region')));
-
         $this->default = $this->params->get('default', $this->default);
     }
 
@@ -38,6 +28,7 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
     {
         $size = $this->getSize($sizex, $sizey);
         $avatar = $this->getURL($user, $size->x, $size->y);
+        $wow = WoW::getInstance();
 
         if (!$avatar) {
             return;
@@ -56,16 +47,17 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
             $this->character->realm = $this->realmUrlSafe($this->character->realm);
 
             if (JPluginHelper::isEnabled('system', 'darktip')) {
-                $attributes['data-darktip'] = 'wow.character:' . $this->params->get('region') . '.' . $this->character->realm . '.' . $this->character->name . '(' . $this->params->get('lang', 'en') . ')';
+                $attributes['data-darktip'] = 'wow.character:' . $wow->params->get('region') . '.' . $this->character->realm . '.' . $this->character->name . '(' . $wow->params->get('locale', 'en') . ')';
             }
 
-            switch ($this->params->get('link', 'battle.net')) {
+            switch ($wow->params->get('link')) {
+                default:
                 case 'battle.net':
-                    $url = 'http://' . $this->params->get('region') . '.battle.net/wow/' . $this->params->get('lang') . '/character/' . $this->character->realm . '/' . $this->character->name . '/';
+                    $url = 'http://' . $wow->params->get('region') . '.battle.net/wow/' . $wow->params->get('locale') . '/character/' . $this->character->realm . '/' . $this->character->name . '/';
                     break;
 
                 case 'wowhead.com':
-                    $url = 'http://' . $this->params->get('lang') . '.wowhead.com/profile=' . $this->params->get('region') . '.' . $this->character->realm . '.' . $this->character->name;
+                    $url = 'http://' . $wow->params->get('locale') . '.wowhead.com/profile=' . $wow->params->get('region') . '.' . $this->character->realm . '.' . $this->character->name;
                     break;
             }
         }
@@ -87,10 +79,15 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
     protected function _getURL($user, $sizex, $sizey)
     {
         $user = KunenaFactory::getUser($user);
+        $wow = WoW::getInstance();
 
-        $members = $this->getWoWCharacterList();
+        try {
+            $result = $wow->getAdapter('WoWAPI')->getData('members');
+        } catch (Exception $e) {
+            return $e->getMessage();
+        }
 
-        if (!is_array($members)) {
+        if (!is_array($result->body->members)) {
             return $this->default;
         }
 
@@ -98,11 +95,11 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
         $name = JString::strtolower($name);
 
         $this->character = null;
-        foreach ($members as $member) {
+        foreach ($result->body->members as $member) {
             $member->character->name = JString::strtolower($member->character->name);
             if ($name == $member->character->name) {
                 $this->character = $member->character;
-                return 'http://' . $this->params->get('region') . '.battle.net/static-render/' . $this->params->get('region') . '/' . $member->character->thumbnail;
+                return 'http://' . $wow->params->get('region') . '.battle.net/static-render/' . $wow->params->get('region') . '/' . $member->character->thumbnail;
             }
         }
 
@@ -116,39 +113,5 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
         } else {
             return str_replace(array('%20', ' '), '-', $realm);
         }
-    }
-
-    protected function getWoWCharacterList()
-    {
-        $url = 'http://' . $this->params->get('region') . '.battle.net/api/wow/guild/' . $this->params->get('realm') . '/' . $this->params->get('guild') . '?fields=members,achievements';
-
-        $cache = JFactory::getCache('wow', 'output');
-        $cache->setCaching(1);
-        $cache->setLifeTime($this->params->get('cache_time', 60));
-
-        $key = md5($url);
-
-        if (!$result = $cache->get($key)) {
-            try {
-                $http = JHttpFactory::getHttp();
-                $http->setOption('userAgent', 'Joomla! ' . JVERSION . '; Kunena Avatar WoW Character; php/' . phpversion());
-
-                $result = $http->get($url, null, $this->params->get('timeout', 10));
-            } catch (Exception $e) {
-                return $e->getMessage();
-            }
-
-            $cache->store($result, $key);
-        }
-
-        // TODO better error message
-        if ($result->code != 200 && self::$error == false) {
-            self::$error = true;
-            JFactory::getApplication()->enqueueMessage('Kunena - WOW Avatar: ' . JHtml::_('link', 'http://wikipedia.org/wiki/List_of_HTTP_status_codes#' . $result->code, $result->code, array('target' => '_blank')), 'error');
-        }
-
-        $result->body = json_decode($result->body);
-
-        return $result->body->members;
     }
 }

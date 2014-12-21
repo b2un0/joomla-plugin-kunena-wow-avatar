@@ -3,7 +3,7 @@
 /**
  * @author     Branko Wilhelm <branko.wilhelm@gmail.com>
  * @link       http://www.z-index.net
- * @copyright  (c) 2013 - 2014 Branko Wilhelm
+ * @copyright  (c) 2013 - 2015 Branko Wilhelm
  * @license    GNU/GPLv3 http://www.gnu.org/licenses/gpl-3.0.html
  */
 
@@ -15,12 +15,13 @@ class plgKunenaWoW_Avatar extends JPlugin
     {
         if (!(class_exists('KunenaForum') && KunenaForum::isCompatible('2.0') && KunenaForum::installed())) return;
 
+        JLoader::register('KunenaAvatarWoW_Avatar', __DIR__ . '/avatar.php');
+
         parent::__construct($subject, $config);
     }
 
     public function onKunenaGetAvatar()
     {
-        require_once __DIR__ . '/avatar.php';
         return new KunenaAvatarWoW_Avatar($this->params);
     }
 }
