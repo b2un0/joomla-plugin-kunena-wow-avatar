@@ -17,15 +17,4 @@
     <updateservers>
         <server type="collection" priority="1" name="z-index development">http://www.z-index.net/en/extensions.xml</server>
     </updateservers>
-    <config>
-        <fields name="params">
-            <fieldset name="basic">
-                <field name="mapping" type="list" default="name" label="Mapping" description="Select the User-Field for Mapping with Character">
-                    <option value="name">Name</option>
-                    <option value="username">Username</option>
-                </field>
-                <field name="default" type="text" default="media/kunena/avatars/nophoto.jpg" required="true" label="Default" description="dont enter a full URL!" />
-            </fieldset>
-        </fields>
-    </config>
 </extension>

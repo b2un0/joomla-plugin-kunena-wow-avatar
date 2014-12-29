@@ -44,8 +44,6 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
         }
 
         if (is_object($this->character)) {
-            $this->character->realm = $this->realmUrlSafe($this->character->realm);
-
             if (JPluginHelper::isEnabled('system', 'darktip')) {
                 $attributes['data-darktip'] = 'wow.character:' . $wow->params->get('region') . '.' . $this->character->realm . '.' . $this->character->name . '(' . $wow->params->get('locale', 'en') . ')';
             }
@@ -91,8 +89,7 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
             return $this->default;
         }
 
-        $name = $user->{$this->params->get('mapping', 'name')};
-        $name = JString::strtolower($name);
+        $name = JString::strtolower($user->getName());
 
         $this->character = null;
         foreach ($result->body->members as $member) {
@@ -104,14 +101,5 @@ class KunenaAvatarWoW_Avatar extends KunenaAvatar
         }
 
         return $this->default;
-    }
-
-    protected function realmUrlSafe($realm)
-    {
-        if (version_compare(JVERSION, 3, '>=')) {
-            return rawurlencode(JString::strtolower($realm));
-        } else {
-            return str_replace(array('%20', ' '), '-', $realm);
-        }
     }
 }
